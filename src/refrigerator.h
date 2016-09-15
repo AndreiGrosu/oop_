@@ -2,9 +2,7 @@
 #ifndef REFRIGERATOR_REFRIGERATOR_H_
 #define REFRIGERATOR_REFRIGERATOR_H_
 
-// now our header is clean, contains only the refrigerator INTERFACE, all the
-// implementation details (bodies of all the member functions) are in the
-// separate refrigerator.cpp implementation file !
+#include <ostream>
 
 /** \brief A class that models a Refrigerator.
  *
@@ -33,6 +31,8 @@ public:
 	 * Get the internal temperature of the refrigerator.
 	 */
 	int get_temperature() const;
+
+	friend std::ostream & operator<<(std::ostream & sink, const refrigerator & object);
 private:
 	/**
 	 * Validate temperatures to be in the range of a real refrigerator:

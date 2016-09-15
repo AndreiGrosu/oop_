@@ -1,7 +1,5 @@
 #include "refrigerator.h"
 
-// here we define all the methods of refrigerator class:
-
 void refrigerator::start() {
 		is_working = true;
 }
@@ -28,4 +26,14 @@ bool refrigerator::is_valid_temperature(int temperature_C) {
 		static const int MIN_TEMP = -40;
 		static const int MAX_TEMP = 0;
 		return (MIN_TEMP <= temperature_C and temperature_C <= MAX_TEMP);
+}
+
+std::ostream & operator<<(std::ostream & sink, const refrigerator & object) {
+	if(object.working()) {
+		sink << "Refrigerator[" << object.get_temperature() << "C]";
+	}
+	else {
+		sink << "Refrigerator[OFF]";
+	}
+	return sink;
 }
