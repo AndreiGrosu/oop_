@@ -33,6 +33,8 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="main.cpp" />
+		<Unit filename="refrigerator.cpp" />
+		<Unit filename="refrigerator.h" />
 		<Unit filename="tools.h" />
 		<Extensions>
 			<code_completion />

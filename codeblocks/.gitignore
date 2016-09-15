@@ -3,4 +3,6 @@ obj
 
 # skip soft links back to ../src
 tools.h
+refrigerator.h
+refrigerator.cpp
 main.cpp
