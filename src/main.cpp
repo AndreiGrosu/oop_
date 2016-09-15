@@ -38,7 +38,9 @@ public:
 	/**
 	 * Turn off a refrigerator.
 	 */
-	void stop();
+	void stop() {
+		is_working = false;
+	}
 	/**
 	 * Check if refrigerator is working.
 	 * @return true if the refrigerator instance is started, false otherwise.
@@ -50,14 +52,19 @@ public:
 	 * Set the internal temperature of the refrigerator.
 	 * @param temperature_C the new temperature, in Celsius degrees of the refrigerator.
 	 */
-	void set_temperature(int temperature_C);
+	void set_temperature(int temperature_C) {
+		current_temperature = temperature_C;
+	}
 	/**
 	 * Get the internal temperature of the refrigerator.
 	 */
-	int get_temperature() const;
+	int get_temperature() const {
+		return current_temperature;
+	}
 private:
 	// we need a member variable to hold the started/stopped state of a refrigerator:
 	bool is_working;
+	int  current_temperature;
 };
 
 
