@@ -86,6 +86,19 @@ int main(int argc, char * argv[]) {
 		goto done;
 	}
 
+	// how about refrigerators allocated on the heap ?
+	{
+		// allocate a refrigerator on the heap
+		refrigerator * p_test_fridge = new refrigerator();
+		passed = passed or test_refrigerator_is_off(*p_test_fridge);
+		if(not passed) {
+			std::cout << "TEST FAILED : refrigerator is off when created on the heap !" << std::endl;
+			goto done;
+		}
+		// no longer needing that fridge on the heap
+		delete p_test_fridge;
+	}
+
 	// let users of this program know we have a working refrigerator.
 	std::cout << "ALL TESTS PASSED !" << std::endl;
 done:
