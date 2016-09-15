@@ -63,6 +63,8 @@ private:
 
 bool test_refrigerator_is_off(const refrigerator &);
 bool test_start_refrigerator(refrigerator &);
+bool test_change_refrigerator_temperature(refrigerator &);
+bool test_stop_refrigerator(refrigerator &);
 
 int main(int argc, char * argv[]) {
 	bool passed = false;
@@ -79,12 +81,40 @@ int main(int argc, char * argv[]) {
 
 	// Test that start() actually works:
 	passed = passed or test_start_refrigerator(test_fridge);
-	// notice that this is getting repetitive (if not passed, notify user, jump:
 	if(not passed) {
 		std::cout << "TEST FAILED : refrigerator is not starting !" << std::endl;
 		goto done;
 	}
 
+	// There is a software development paradigm called TEST-DRIVEN DEVELOPMENT (TDD) which
+	// we are employing here.
+	// In this paradigm, all types (classes) we create must be covered by tests such that
+	// if we change the implementation of a class, we can run these tests and see if
+	// we broke something.
+	//
+	// One school of thought in the TDD community sais that it is better to write the tests
+	// first for a given class and then implement the functionality in that class.
+	// That is, we imagine the possible uses of our new class and write a test program
+	// that should cover all these usages and then we procede to implement the class such
+	// that our test program completes correctly.
+	//
+	// We've done the first two tests along with their implementation so now let's try
+	// writing in advance all unit tests for our refrigerator and then implement the
+	// functionality.
+
+	// Test that we can change the temperature of a refrigerator:
+	passed = passed or test_change_refrigerator_temperature(test_fridge);
+	if(not passed) {
+		std::cout << "TEST FAILED : can set refrigerator temperature !" << std::endl;
+		goto done;
+	}
+
+	// Test that a working refrigerator can be stopped:
+	passed = passed or test_stop_refrigerator(test_fridge);
+	if(not passed) {
+		std::cout << "TEST FAILED : refrigerator is not stopping !" << std::endl;
+		goto done;
+	}
 
 	// let users of this program know we have a working refrigerator.
 	std::cout << "ALL TESTS PASSED !" << std::endl;
@@ -106,7 +136,23 @@ bool test_refrigerator_is_off(const refrigerator & r) {
  * Tests if a refrigerator actually starts.
  */
 bool test_start_refrigerator(refrigerator & r) {
-	// and we need to implement start() since we use it:
 	r.start();
 	return(true == r.working());
+}
+
+/**
+ * Test that a change in temperature is actually performed.
+ */
+bool test_change_refrigerator_temperature(refrigerator & r) {
+	const int freezing = -10;
+	r.set_temperature(freezing);
+	return (freezing == r.get_temperature());
+}
+
+/**
+ * Tests if a refrigerator actually stops.
+ */
+bool test_stop_refrigerator(refrigerator & r) {
+	r.stop();
+	return(false == r.working());
 }
