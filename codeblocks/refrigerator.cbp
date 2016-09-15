@@ -35,6 +35,8 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="refrigerator.cpp" />
 		<Unit filename="refrigerator.h" />
+		<Unit filename="test.cpp" />
+		<Unit filename="test.h" />
 		<Unit filename="tools.h" />
 		<Extensions>
 			<code_completion />
