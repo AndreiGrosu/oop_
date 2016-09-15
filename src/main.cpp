@@ -32,7 +32,9 @@ public:
 	/**
 	 * Turn on a refrigerator.
 	 */
-	void start();
+	void start() {
+		is_working = true;
+	}
 	/**
 	 * Turn off a refrigerator.
 	 */
@@ -60,6 +62,7 @@ private:
 
 
 bool test_refrigerator_is_off(const refrigerator &);
+bool test_start_refrigerator(refrigerator &);
 
 int main(int argc, char * argv[]) {
 	bool passed = false;
@@ -67,37 +70,21 @@ int main(int argc, char * argv[]) {
 	refrigerator test_fridge;
 	print_stack_object(test_fridge);
 
-	// We will now begin the implementation of our refrigerator 'backwards' so to speak,
-	// by first writing TEST CASES for our interface.
-	// That is, we put ourself in the shoes of a programmer that is given the refrigerator
-	// interface above and has to use it.
-	// In order for the refrigerator to work correctly it must pass some TESTS that guarantee
-	// the internal state of a refrigerator is sane.
-	// For example, we assume that a new refrigerator is powered off, as would be a new
-	// refrigerator you bought and was delivered to your home.
-	// Each of these assumptions needs to be turned into a function that tests that specific
-	// assumption:
-
+	// Test that a new refrigerator is turned off:
 	passed = passed or test_refrigerator_is_off(test_fridge);
 	if(not passed) {
-		// if we fail the test, tell the user about and jump to the end of main since
-		// there is no point in continuing if we can't even get this right:
 		std::cout << "TEST FAILED : refrigerator is off when created !" << std::endl;
 		goto done;
 	}
 
-	// how about refrigerators allocated on the heap ?
-	{
-		// allocate a refrigerator on the heap
-		refrigerator * p_test_fridge = new refrigerator();
-		passed = passed or test_refrigerator_is_off(*p_test_fridge);
-		if(not passed) {
-			std::cout << "TEST FAILED : refrigerator is off when created on the heap !" << std::endl;
-			goto done;
-		}
-		// no longer needing that fridge on the heap
-		delete p_test_fridge;
+	// Test that start() actually works:
+	passed = passed or test_start_refrigerator(test_fridge);
+	// notice that this is getting repetitive (if not passed, notify user, jump:
+	if(not passed) {
+		std::cout << "TEST FAILED : refrigerator is not starting !" << std::endl;
+		goto done;
 	}
+
 
 	// let users of this program know we have a working refrigerator.
 	std::cout << "ALL TESTS PASSED !" << std::endl;
@@ -105,13 +92,21 @@ done:
 	return (passed)?(EXIT_SUCCESS):(EXIT_FAILURE);
 }
 
-// implemenmtation of test functions goes here so there are not in our way when we look at what
+// Implementation of test functions goes here so there are not in our way when we look at what
 // main() does:
 
 /**
  * Tests if the given refrigerator is not working.
  */
 bool test_refrigerator_is_off(const refrigerator & r) {
-	// since we use the working() method we need to define it in class refrigerator:
 	return (false == r.working());
+}
+
+/**
+ * Tests if a refrigerator actually starts.
+ */
+bool test_start_refrigerator(refrigerator & r) {
+	// and we need to implement start() since we use it:
+	r.start();
+	return(true == r.working());
 }
