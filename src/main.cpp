@@ -40,8 +40,6 @@ public:
 	 * @param temperature_C the new temperature, in Celsius degrees of the refrigerator.
 	 */
 	void set_temperature(int temperature_C) {
-		// now we only set the temperature if it is in the range of the working
-		// temperatures of a real refrigerator (one that doesn't also cook food):
 		if( is_valid_temperature(temperature_C) ) current_temperature = temperature_C;
 	}
 	/**
@@ -51,18 +49,17 @@ public:
 		return current_temperature;
 	}
 private:
-	// We add a private method to our class since users of this class have no use
-	// of it. It is only helping the set_temperature method and, being an
-	// IMPLEMENTATION DETAIL of the refrigerator class must not be accessed from
-	// outside.
+	/**
+	 * Validate temperatures to be in the range of a real refrigerator:
+	 * \param temperature_C temperature to check
+	 * \return true if the temperature is in [-40,0]
+	 */
 	bool is_valid_temperature(int temperature_C) {
-		// we define a temperature range [-40,0] :
 		static const int MIN_TEMP = -40;
 		static const int MAX_TEMP = 0;
 		return (MIN_TEMP <= temperature_C and temperature_C <= MAX_TEMP);
 	}
 private:
-	// we need a member variable to hold the started/stopped state of a refrigerator:
 	bool is_working;
 	int  current_temperature;
 };
@@ -73,10 +70,32 @@ bool test_start_refrigerator(refrigerator &);
 bool test_change_refrigerator_temperature(refrigerator &);
 bool test_stop_refrigerator(refrigerator &);
 
+
+// Uncomment this line to build the test with a refrigerator instance allocated
+// on the heap instead of on stack:
+//#define ON_HEAP
+
 int main(int argc, char * argv[]) {
 	bool passed = false;
 
+// These are CONDITIONAL COMPILATION PRAGMAS
+// If the preprocessor sees a token called
+// defined in any header or source file it will
+// examine the lines between #ifdef and #else.
+// Otherwise it will examine the line between
+// #else and #endif and act as if the other
+// two lines do not exist.
+//
+// This allows us to easily switch between testing
+// refrigerators allocated on the heap and on the 
+// stack when we build the project.
+#ifdef ON_HEAP
+	refrigerator * p_test_fridge = new refrigerator;
+	refrigerator & test_fridge = *p_test_fridge;
+#else
 	refrigerator test_fridge;
+#endif
+
 	print_stack_object(test_fridge);
 
 	// Test that a new refrigerator is turned off:
@@ -100,9 +119,6 @@ int main(int argc, char * argv[]) {
 		goto done;
 	}
 
-	// however this is not quite ok ... let's look at the temperature test
-	// function to see why:
-
 	// Test that a working refrigerator can be stopped:
 	passed = passed or test_stop_refrigerator(test_fridge);
 	if(not passed) {
@@ -113,6 +129,10 @@ int main(int argc, char * argv[]) {
 	// let users of this program know we have a working refrigerator.
 	std::cout << "ALL TESTS PASSED !" << std::endl;
 done:
+// make sure we delete the heap instance when compiling with ON_HEAP
+#ifdef ON_HEAP
+	delete p_test_fridge;
+#endif
 	return (passed)?(EXIT_SUCCESS):(EXIT_FAILURE);
 }
 
@@ -137,12 +157,12 @@ bool test_start_refrigerator(refrigerator & r) {
 bool test_change_refrigerator_temperature(refrigerator & r) {
 	bool passed = false;
 
+	// refrigerator accepts valid temperatures
 	const int freezing = -10;
 	r.set_temperature(freezing);
 	passed = (freezing == r.get_temperature());
 
-	// now we modify the test such that we check that the temperature
-	// of the fridge was not changed by an invalid value:
+	// refrigerator rejects valid temperatures
   const int boiling = 100;
 	r.set_temperature(boiling);
 	passed = (freezing == r.get_temperature());
