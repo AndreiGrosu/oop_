@@ -41,7 +41,9 @@ public:
 	 * Check if refrigerator is working.
 	 * @return true if the refrigerator instance is started, false otherwise.
 	 */
-	bool working() const;
+	bool working() const {
+		return (is_working);
+	}
 	/**
 	 * Set the internal temperature of the refrigerator.
 	 * @param temperature_C the new temperature, in Celsius degrees of the refrigerator.
@@ -52,29 +54,51 @@ public:
 	 */
 	int get_temperature() const;
 private:
+	// we need a member variable to hold the started/stopped state of a refrigerator:
+	bool is_working;
 };
 
+
+bool test_refrigerator_is_off(const refrigerator &);
 
 int main(int argc, char * argv[]) {
 	bool passed = false;
 
-	// we create a new refrigerator instance on the stack and, surprisingly the
-	// code compiles and runs !
 	refrigerator test_fridge;
-
-	// we can use the refrigerator class as it is.
 	print_stack_object(test_fridge);
 
-	// this is because, for one, we don't call any methods of test_fridge.
-	// if we tried to start the refrigerator we would get a COMPILE TIME error:
-	//
-	// test_fridge.start(); // un-comment this line and try for yourself.
-	//
-	// when compiling the project:
-	// Error ... undefined reference to `refrigerator::start()'
-    //
-	// as long as no code ever calls a method or an object (or a C function for that matter)
-	// there is no error, the compiler 'sees' that it is not needed.
+	// We will now begin the implementation of our refrigerator 'backwards' so to speak,
+	// by first writing TEST CASES for our interface.
+	// That is, we put ourself in the shoes of a programmer that is given the refrigerator
+	// interface above and has to use it.
+	// In order for the refrigerator to work correctly it must pass some TESTS that guarantee
+	// the internal state of a refrigerator is sane.
+	// For example, we assume that a new refrigerator is powered off, as would be a new
+	// refrigerator you bought and was delivered to your home.
+	// Each of these assumptions needs to be turned into a function that tests that specific
+	// assumption:
 
+	passed = passed or test_refrigerator_is_off(test_fridge);
+	if(not passed) {
+		// if we fail the test, tell the user about and jump to the end of main since
+		// there is no point in continuing if we can't even get this right:
+		std::cout << "TEST FAILED : refrigerator is off when created !" << std::endl;
+		goto done;
+	}
+
+	// let users of this program know we have a working refrigerator.
+	std::cout << "ALL TESTS PASSED !" << std::endl;
+done:
 	return (passed)?(EXIT_SUCCESS):(EXIT_FAILURE);
+}
+
+// implemenmtation of test functions goes here so there are not in our way when we look at what
+// main() does:
+
+/**
+ * Tests if the given refrigerator is not working.
+ */
+bool test_refrigerator_is_off(const refrigerator & r) {
+	// since we use the working() method we need to define it in class refrigerator:
+	return (false == r.working());
 }
