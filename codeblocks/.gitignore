@@ -1,0 +1,5 @@
+bin
+obj
+
+# skip soft links back to ../src
+main.cpp
