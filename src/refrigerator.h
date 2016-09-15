@@ -14,6 +14,12 @@ public:
 	 * Initializes a refrigerator that is off and at 0C.
 	 */
 	refrigerator();
+
+	/**
+	 * Configuration constructor.
+	 * Initialized a refrigerator with a given brand name.
+	 */
+	refrigerator(const char * brand_name);
 	/**
 	 * Turn on a refrigerator.
 	 */
@@ -24,18 +30,23 @@ public:
 	void stop();
 	/**
 	 * Check if refrigerator is working.
-	 * @return true if the refrigerator instance is started, false otherwise.
+	 * \return true if the refrigerator instance is started, false otherwise.
 	 */
 	bool working() const;
 	/**
 	 * Set the internal temperature of the refrigerator.
-	 * @param temperature_C the new temperature, in Celsius degrees of the refrigerator.
+	 * \param temperature_C the new temperature, in Celsius degrees of the refrigerator.
 	 */
 	void set_temperature(int temperature_C);
 	/**
 	 * Get the internal temperature of the refrigerator.
 	 */
 	int get_temperature() const;
+
+	/**
+	 * Get the brand name of the refrigerator (for example "Arctic")
+	 */
+	const char * brand() const;
 
 	friend std::ostream & operator<<(std::ostream & sink, const refrigerator & object);
 private:
@@ -48,6 +59,7 @@ private:
 private:
 	bool is_working;
 	int  current_temperature;
+	const char * brand_name;
 };
 
 #endif // REFRIGERATOR_REFRIGERATOR_H_
