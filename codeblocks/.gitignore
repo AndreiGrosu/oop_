@@ -2,4 +2,5 @@ bin
 obj
 
 # skip soft links back to ../src
+tools.h
 main.cpp
