@@ -10,6 +10,11 @@
 class refrigerator {
 public:
 	/**
+	 * Default constructor.
+	 * Initializes a refrigerator that is off and at 0C.
+	 */
+	refrigerator();
+	/**
 	 * Turn on a refrigerator.
 	 */
 	void start();

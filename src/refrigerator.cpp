@@ -1,5 +1,11 @@
 #include "refrigerator.h"
 
+refrigerator::refrigerator() {
+	// now instances of refrigerator are created with a consistent initial state and our tests pass
+	is_working = false;
+	current_temperature = 0; //TODO
+}
+
 void refrigerator::start() {
 		is_working = true;
 }
