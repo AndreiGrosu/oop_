@@ -40,13 +40,26 @@ public:
 	 * @param temperature_C the new temperature, in Celsius degrees of the refrigerator.
 	 */
 	void set_temperature(int temperature_C) {
-		current_temperature = temperature_C;
+		// now we only set the temperature if it is in the range of the working
+		// temperatures of a real refrigerator (one that doesn't also cook food):
+		if( is_valid_temperature(temperature_C) ) current_temperature = temperature_C;
 	}
 	/**
 	 * Get the internal temperature of the refrigerator.
 	 */
 	int get_temperature() const {
 		return current_temperature;
+	}
+private:
+	// We add a private method to our class since users of this class have no use
+	// of it. It is only helping the set_temperature method and, being an
+	// IMPLEMENTATION DETAIL of the refrigerator class must not be accessed from
+	// outside.
+	bool is_valid_temperature(int temperature_C) {
+		// we define a temperature range [-40,0] :
+		static const int MIN_TEMP = -40;
+		static const int MAX_TEMP = 0;
+		return (MIN_TEMP <= temperature_C and temperature_C <= MAX_TEMP);
 	}
 private:
 	// we need a member variable to hold the started/stopped state of a refrigerator:
@@ -124,17 +137,15 @@ bool test_start_refrigerator(refrigerator & r) {
 bool test_change_refrigerator_temperature(refrigerator & r) {
 	bool passed = false;
 
-	// here I am setting a 'valid' temperature, that is something in line
-	// with what a real refrigerator would accept in order to function properly:
 	const int freezing = -10;
 	r.set_temperature(freezing);
 	passed = (freezing == r.get_temperature());
 
-	// however a real user of our refrigerator class could as well do this
-	// and, as you can see, the tests still succeed !
+	// now we modify the test such that we check that the temperature
+	// of the fridge was not changed by an invalid value:
   const int boiling = 100;
 	r.set_temperature(boiling);
-	passed = (boiling == r.get_temperature());
+	passed = (freezing == r.get_temperature());
 
 	return passed;
 }
