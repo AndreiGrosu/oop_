@@ -11,59 +11,41 @@
 
 #include "tools.h"
 
-/** \brief A class that models a Refrigerator.
- *
- */
-class refrigerator {
-public:
-	/**
-	 * Turn on a refrigerator.
-	 */
-	void start() {
-		is_working = true;
-	}
-	/**
-	 * Turn off a refrigerator.
-	 */
-	void stop() {
-		is_working = false;
-	}
-	/**
-	 * Check if refrigerator is working.
-	 * @return true if the refrigerator instance is started, false otherwise.
-	 */
-	bool working() const {
-		return (is_working);
-	}
-	/**
-	 * Set the internal temperature of the refrigerator.
-	 * @param temperature_C the new temperature, in Celsius degrees of the refrigerator.
-	 */
-	void set_temperature(int temperature_C) {
-		if( is_valid_temperature(temperature_C) ) current_temperature = temperature_C;
-	}
-	/**
-	 * Get the internal temperature of the refrigerator.
-	 */
-	int get_temperature() const {
-		return current_temperature;
-	}
-private:
-	/**
-	 * Validate temperatures to be in the range of a real refrigerator:
-	 * \param temperature_C temperature to check
-	 * \return true if the temperature is in [-40,0]
-	 */
-	bool is_valid_temperature(int temperature_C) {
-		static const int MIN_TEMP = -40;
-		static const int MAX_TEMP = 0;
-		return (MIN_TEMP <= temperature_C and temperature_C <= MAX_TEMP);
-	}
-private:
-	bool is_working;
-	int  current_temperature;
-};
+// This is getting unwielding for two reasons, one practical and one conceptual.
+// The practical reason is that the refrigerator class is defined and declared
+// in our main.cpp file and there is too much code to move through.
+// The conceptual reason is that another programmer can't reuse the class in
+// his program unless he copy-pastes the class definition and, even more so
+// the conceptual problem is that, as it is, the refrigerator class has its
+// implementation available and anyone can change how start() or any other
+// method works or, even if they don't change them write code that uses a
+// refrigerator based on assumptions on how its methods work, as oppose to
+// just seeing the interface.
+//
+// For this reason we moved the refrigerator class outside in its own files.
+// One refrigerator.h HEADER FILE which contains only the interface and a
+// refrigerator.cpp IMPLEMENTATION FILE which contains the actual functionality
+// of a refrigerator.
+//
+// You can look at the build products and see that refrigerator.cpp is compiled
+// independently into machine code as refrigerator.o (OBJECT FILE).
+// Now main.cpp can just use the refrigerator.h HEADER which allows checks at
+// compile time that calls to refrigerator methods are syntactically correct
+// but re-use the refrigerator.o OBJECT FILE directly after compilation.
+// If we don't change the refrigerator implementation, we can just re-use the
+// object file and skip compilation.
+// Even more so, we can give another programmer just the header and the object
+// file and he can use a refrigerator without actually seeing the implementation
+// code (!)
 
+// Now we simply include the header and have the class available (just like when
+// you have std::cout available when you include iostream.
+// The difference is that iostream is a system-wide header and it is included
+// with angle brackets <iostream> and the compiler will know to look in the 
+// standard location of headers on this OS, while our refrigerator is local to
+// this project and is included in double quotes "refrigerator.h" which means
+// the compiler will look for it in the project directory.
+#include "refrigerator.h"
 
 bool test_refrigerator_is_off(const refrigerator &);
 bool test_start_refrigerator(refrigerator &);
